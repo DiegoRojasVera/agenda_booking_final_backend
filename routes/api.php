@@ -57,6 +57,9 @@ Route::get('stylist/{id}', 'App\Http\Controllers\StylistController@show'); //lis
 Route::get('stylist', 'App\Http\Controllers\StylistController@index'); //listar todo
 Route::post('stylist', 'App\Http\Controllers\StylistController@register'); //crearte
 Route::delete('stylist/{id}', 'App\Http\Controllers\StylistController@destroy');
+Route::get('/stylistsbusbar/{id}', 'App\Http\Controllers\StylistController@searchById'); //buscar
+
+
 
 //ServiceStylist
 Route::get('servicestylist', 'App\Http\Controllers\ServiciosStylistController@index'); //listar todo

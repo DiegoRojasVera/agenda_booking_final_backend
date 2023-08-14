@@ -15,35 +15,36 @@ class StylistController extends Controller
             ->get());
     }
 
-    //Register Stylist
-    public function register(Request $request)
-    {
-        //validate fields
 
-        $attrs = $request->validate([
-            'name' => 'required|string',
-            'photo' => 'string',
-            'phone' => 'required|string',
-            'score' => 'string',
+public function register(Request $request)
+{
+    // Validar los datos recibidos del formulario
+    $request->validate([
+        'name' => 'required|string',
+        'photo' => 'nullable|string',
+        'phone' => 'required|string',
+        'score' => 'required|numeric',
+        'working_days' => 'required|array',
+    ]);
 
-        ]);
+    // Obtener los datos del formulario
+    $data = $request->only([
+        'name',
+        'photo',
+        'phone',
+        'score',
+        'working_days',
+    ]);
 
-        //create user
-        $stylist = Stylist::create([
-            'name' => $attrs['name'],
-            'photo' => $attrs['photo'],
-            'phone' => $attrs['phone'],
-            'score' => $attrs['score'],
+    // Crear un nuevo estilista con los datos proporcionados
+    $stylist = Stylist::create($data);
 
-        ]);
+    // Retornar una respuesta con el mensaje "Stylist guardado"
+    return response()->json(['message' => 'Stylist guardado'], 200);
+	}
+ 
 
-        return response([
-            'message' => 'Stylist created.',
-            'Stylist' => $stylist,
-        ], 200);
-    }
-
-    // get single 
+    // get single
     public function show($id)
     {
         return response()
@@ -52,6 +53,22 @@ class StylistController extends Controller
                 //->orderByDesc('email', 'DESC')
                 ->get());
     }
+
+	// Buscar
+	public function searchById(Request $request)
+{
+    $id = $request->input('id');
+
+    $stylist = Stylist::find($id);
+
+    if (!$stylist) {
+        return response()->json(['message' => 'Stylist no encontrado'], 404);
+    }
+
+    return response()->json($stylist);
+}
+
+
 
     //delete post
     public function destroy($id)
