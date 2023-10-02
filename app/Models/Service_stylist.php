@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Service;
 use App\Models\Stylist;
 
-
 class Service_stylist extends Model
 {
     use HasFactory;
@@ -16,6 +15,9 @@ class Service_stylist extends Model
     protected $fillable = [
         'service_id',
         'stylist_id',
-
+        'nombre_servicio'
     ];
+
+    // Deshabilitar marcas de tiempo
+    public $timestamps = false;
 }

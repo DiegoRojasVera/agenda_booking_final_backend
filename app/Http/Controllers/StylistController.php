@@ -84,4 +84,40 @@ public function register(Request $request)
             'message' => 'stylist deleted.'
         ], 200);
     }
+
+
+	public function update(Request $request, $id)
+{
+    // Validar los datos recibidos del formulario
+    $request->validate([
+        'name' => 'string',
+        'photo' => 'nullable|string',
+        'phone' => 'string',
+        'score' => 'numeric',
+        'working_days' => 'array',
+    ]);
+
+    // Obtener el estilista por su ID
+    $stylist = Stylist::find($id);
+
+    if (!$stylist) {
+        return response()->json(['message' => 'Stylist no encontrado'], 404);
+    }
+
+    // Obtener los datos actualizados del formulario
+    $data = $request->only([
+        'name',
+        'photo',
+        'phone',
+        'score',
+        'working_days',
+    ]);
+
+    // Actualizar los datos del estilista
+    $stylist->update($data);
+
+    // Retornar una respuesta con el mensaje "Stylist actualizado"
+    return response()->json(['message' => 'Stylist actualizado'], 200);
+}
+
 }

@@ -26,14 +26,12 @@ Route::get('controlmesservicelist/{month?}','App\Http\Controllers\AppointmentCon
 Route::get('cantidadmeslist','App\Http\Controllers\AppointmentController@cantidadmeslist');
 
 
-
 Route::post('/puntuacion', 'App\Http\Controllers\PuntuacionController@store'); // Guardar una nueva puntuación
 Route::get('/puntuacion/promedio/{stylist}', 'App\Http\Controllers\PuntuacionController@promedioPorStylist'); // Obtener el promedio de puntuaciones para un stylist en particular
 Route::get('/puntuacion', 'App\Http\Controllers\PuntuacionController@index'); // Listar todas las puntuaciones
 Route::get('/puntuacion/stylist/{stylist}', 'App\Http\Controllers\PuntuacionController@listarPorStylist'); // Listar todas las puntuaciones para un stylist en particular
 Route::get('/clientes/{email}/stylists-services', 'App\Http\Controllers\PuntuacionController@showStylistsAndServices');
 Route::get('/services/{id}/name',  'App\Http\Controllers\PuntuacionController@getServiceName');
-
 
 
 Route::get('appointment/{id}', 'App\Http\Controllers\ServicesController@showAppointment');
@@ -58,7 +56,7 @@ Route::get('stylist', 'App\Http\Controllers\StylistController@index'); //listar 
 Route::post('stylist', 'App\Http\Controllers\StylistController@register'); //crearte
 Route::delete('stylist/{id}', 'App\Http\Controllers\StylistController@destroy');
 Route::get('/stylistsbusbar/{id}', 'App\Http\Controllers\StylistController@searchById'); //buscar
-
+Route::put('stylists/{id}', 'App\Http\Controllers\StylistController@update');
 
 
 //ServiceStylist
@@ -69,6 +67,7 @@ Route::get('servicestylistall/{stylist_id}', 'App\Http\Controllers\ServiciosStyl
 
 Route::get('service/{id}', 'App\Http\Controllers\ServiceController@show');
 Route::get('service', 'App\Http\Controllers\ServiceController@index');
+Route::post('servicestylistcrearte', 'App\Http\Controllers\ServiceController@store');
 
 Route::resource('/client', 'App\Http\Controllers\ProductsController')->except([
   'create', 'edit'
