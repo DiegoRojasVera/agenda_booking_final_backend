@@ -6,6 +6,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\UpdateController;
+
 
 
 // Public routes
@@ -41,6 +43,8 @@ Route::delete('appointment/{id}', 'App\Http\Controllers\ServicesController@destr
 
 Route::get('Prueba', 'App\Http\Controllers\ClientController@Prueba');
 Route::get('postsnologin', 'App\Http\Controllers\PostController@indexnologin');
+
+Route::get('/updatesversion', 'App\Http\Controllers\UpdateController@index');
 
 
 Route::get('clients', 'App\Http\Controllers\ClientController@index');
