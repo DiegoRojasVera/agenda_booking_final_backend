@@ -23,6 +23,7 @@ public function register(Request $request)
         'name' => 'required|string',
         'photo' => 'nullable|string',
         'phone' => 'required|string',
+	'sucursal' => 'required|string',
         'score' => 'required|numeric',
         'working_days' => 'required|array',
     ]);
@@ -31,7 +32,8 @@ public function register(Request $request)
     $data = $request->only([
         'name',
         'photo',
-        'phone',
+        'phone',	
+	'sucursal',
         'score',
         'working_days',
     ]);
@@ -42,7 +44,19 @@ public function register(Request $request)
     // Retornar una respuesta con el mensaje "Stylist guardado"
     return response()->json(['message' => 'Stylist guardado'], 200);
 	}
- 
+
+
+
+// listar por sucursal
+
+public function indexBySucursal($sucursal)
+{
+    return response()->json(Stylist::where('sucursal', $sucursal)
+        ->orderBy('id', 'ASC')
+        ->get());
+}
+
+
 
     // get single
     public function show($id)
@@ -58,7 +72,7 @@ public function register(Request $request)
 	public function searchById(Request $request)
 {
     $id = $request->input('id');
-
+	
     $stylist = Stylist::find($id);
 
     if (!$stylist) {
@@ -94,6 +108,7 @@ public function register(Request $request)
         'photo' => 'nullable|string',
         'phone' => 'string',
         'score' => 'numeric',
+	'sucursal'=> 'string',
         'working_days' => 'array',
     ]);
 
@@ -109,6 +124,7 @@ public function register(Request $request)
         'name',
         'photo',
         'phone',
+	'sucursal',
         'score',
         'working_days',
     ]);

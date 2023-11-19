@@ -22,7 +22,7 @@ Route::get('services/{id}', 'App\Http\Controllers\ServicesController@show');
 Route::get('grafico', 'App\Http\Controllers\AppointmentController@index');
 Route::get('monthly-summary/{month?}', 'App\Http\Controllers\AppointmentController@monthlySummary');
 Route::get('controlmesservice/{month}/{service?}', 'App\Http\Controllers\AppointmentController@controlmesservice');
-Route::get('controlmesstylist/{month}/{stylist?}', 'App\Http\Controllers\AppointmentController@controlmesstylist');
+Route::get('controlmes<stylist/{month}/{stylist?}', 'App\Http\Controllers\AppointmentController@controlmesstylist');
 Route::get('controlmesstulistlist/{month}', 'App\Http\Controllers\AppointmentController@controlmesstulistlist');
 Route::get('controlmesservicelist/{month?}','App\Http\Controllers\AppointmentController@controlmesservicelist');
 Route::get('cantidadmeslist','App\Http\Controllers\AppointmentController@cantidadmeslist');
@@ -42,7 +42,6 @@ Route::delete('appointment/{id}', 'App\Http\Controllers\ServicesController@destr
 
 
 Route::get('Prueba', 'App\Http\Controllers\ClientController@Prueba');
-Route::get('listar', 'App\Http\Controllers\ClientController@index');
 Route::get('postsnologin', 'App\Http\Controllers\PostController@indexnologin');
 
 Route::get('/updatesversion', 'App\Http\Controllers\UpdateController@index');

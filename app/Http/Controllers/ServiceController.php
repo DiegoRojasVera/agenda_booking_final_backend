@@ -40,29 +40,42 @@ class ServiceController extends Controller
         ], 200);
     }
 	
-	 public function store(Request $request)
-    {
-        // Valida los datos del formulario
-        $request->validate([
-            'service_id' => 'required|integer',
-            'stylist_id' => 'required|integer',
-            'nombre_servicio' => 'required|string',
-        ]);
+
 
         // Crea un nuevo registro Service_stylist
-        $serviceStylist = Service_stylist::create([
-            'service_id' => $request->input('service_id'),
-            'stylist_id' => $request->input('stylist_id'),
-            'nombre_servicio' => $request->input('nombre_servicio'),
-        ]);
+public function store(Request $request)
+{
+    // Valida los datos del formulario
+    $request->validate([
+        'service_id' => 'required|integer',
+        'stylist_id' => 'required|integer',
+        'nombre_servicio' => 'required|string',
+    ]);
 
-        // Retorna una respuesta con el registro creado
+    // Verifica si ya existe un registro con la misma combinación de service_id y stylist_id
+    $existingRecord = Service_stylist::where('service_id', $request->input('service_id'))
+        ->where('stylist_id', $request->input('stylist_id'))
+        ->first();
+
+    if ($existingRecord) {
         return response()->json([
-            'message' => 'Service_stylist created successfully',
-            'data' => $serviceStylist,
-        ], 201);
+            'message' => 'This stylist already has this service assigned.',
+        ], 400); // Devuelve un código de estado 400 (Bad Request) o el adecuado para un registro duplicado.
     }
 
+    // Si no existe un registro duplicado, crea un nuevo registro Service_stylist
+    $serviceStylist = Service_stylist::create([
+        'service_id' => $request->input('service_id'),
+        'stylist_id' => $request->input('stylist_id'),
+        'nombre_servicio' => $request->input('nombre_servicio'),
+    ]);
+
+    // Retorna una respuesta con el registro creado
+    return response()->json([
+        'message' => 'Service_stylist created successfully',
+        'data' => $serviceStylist,
+    ], 201);
+}
 
 
 }

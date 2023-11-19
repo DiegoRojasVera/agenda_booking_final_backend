@@ -3,72 +3,72 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service_stylist;
-use App\Models\Stylist;
 use Illuminate\Http\Request;
-
 
 class ServiciosStylistController extends Controller
 {
     public function index()
     {
-
-        $service_stylist = Service_stylist::select("service_stylist.*")->get()->toArray();
-
+        $service_stylist = Service_stylist::all();
         return response()->json($service_stylist);
-        //  return response()->json(Service_stylist::orderBy('id', 'ASC')
-        //      ->get());
     }
 
-    //Register Stylist
     public function register(Request $request)
     {
-        //validate fields
-
+        // Validate fields
         $attrs = $request->validate([
             'service_id' => 'required|string',
             'stylist_id' => 'required|string',
-
         ]);
 
-        //create user
-        $servicestylist = Service_stylist::create([
-            'service_id' => $attrs['service_id'],
-            'stylist_id' => $attrs['stylist_id'],
+        // Check if a record with the same stylist and service already exists
+        $existingRecord = Service_stylist::where('service_id', $attrs['service_id'])
+            ->where('stylist_id', $attrs['stylist_id'])
+            ->first();
 
+        if ($existingRecord) {
+            return response([
+                'message' => 'This stylist already has this service assigned.',
+            ], 400);
+        }
 
-        ]);
+        try {
+            // If no existing record, create a new one
+            $servicestylist = Service_stylist::create([
+                'service_id' => $attrs['service_id'],
+                'stylist_id' => $attrs['stylist_id'],
+            ]);
 
-        return response([
-            'message' => 'servicestylist created.',
-            'Stylist' => $servicestylist,
-        ], 200);
+            return response([
+                'message' => 'servicestylist created.',
+                'Stylist' => $servicestylist,
+            ], 200);
+        } catch (\Exception $e) {
+            return response([
+                'message' => 'Error while creating servicestylist: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
-    // get single 
     public function show($id)
     {
-        return response()
-            ->json(Service_stylist::where('id', $id)
-                //     ->with('appointments.stylist', 'appointments.service')
-                //->orderByDesc('email', 'DESC')
-                ->get());
-    }
-    // get single 
-    public function showServicesStylist($stylist_id)
-    {
-        return response()
-            ->json(Service_stylist::where('stylist_id', $stylist_id)
-                ->get());
+        return response()->json(Service_stylist::find($id));
     }
 
-    //delete post
+    public function showServicesStylist($stylist_id)
+    {
+        $services = Service_stylist::where('stylist_id', $stylist_id)->get();
+
+        if ($services->isEmpty()) {
+            return response()->json(['message' => 'No services found for the given stylist.'], 404);
+        }
+
+        return response()->json($services);
+    }
+
     public function destroy($id)
     {
         $stylist = Service_stylist::find($id);
-
-
-        // $client->comments()->delete();
-        // $client->likes()->delete();
         $stylist->delete();
 
         return response([

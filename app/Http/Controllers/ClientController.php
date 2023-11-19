@@ -18,7 +18,6 @@ class ClientController extends Controller
     public function index()
     {
         return response()->json(Client::orderBy('inicio', 'DESC')
-            ->with('appointments.stylist', 'appointments.service')
             ->get());
     }
 
