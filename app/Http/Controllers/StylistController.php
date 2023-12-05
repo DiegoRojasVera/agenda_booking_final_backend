@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Stylist;
+use Illuminate\Support\Str;
 
 class StylistController extends Controller
 {
@@ -134,6 +135,18 @@ public function indexBySucursal($sucursal)
 
     // Retornar una respuesta con el mensaje "Stylist actualizado"
     return response()->json(['message' => 'Stylist actualizado'], 200);
+
 }
+
+
+ public function getStylistById($id)
+    {
+        // Obtener el estilista por su ID
+        $stylist = Stylist::findOrFail($id);
+
+        // Retornar los datos del estilista en formato JSON
+        return response()->json($stylist);
+    }
+
 
 }

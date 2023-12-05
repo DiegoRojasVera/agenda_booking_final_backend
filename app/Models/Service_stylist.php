@@ -20,4 +20,14 @@ class Service_stylist extends Model
 
     // Deshabilitar marcas de tiempo
     public $timestamps = false;
+	
+	public function service()
+    {
+        return $this->belongsTo(Service::class, 'service_id');
+    }
+
+    public function stylist()
+    {
+        return $this->belongsTo(Stylist::class, 'stylist_id');
+    }
 }

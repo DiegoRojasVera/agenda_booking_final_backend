@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request; // Asegúrate de tener esta importación
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Client;
 use App\Models\Stylist;
 use Carbon\Carbon;
+use App\Exports\ClientsExport;
+
 
 class ClientController extends Controller
 
@@ -31,6 +35,42 @@ class ClientController extends Controller
 	}
 
 
+	public function getDataByDateRange(Request $request)
+{
+    try {
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+
+        $data = Client::whereBetween('inicio', [$start_date, $end_date])
+            ->orderBy('inicio', 'DESC')
+            ->get();
+
+        return response()->json($data);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
+
+
+public function exportData(Request $request)
+{
+    try {
+        // Obtener datos según tus criterios
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $clients = Client::whereBetween('inicio', [$startDate, $endDate])->get();
+
+        // Exportar datos a un archivo Excel
+        return Excel::download(new ClientsExport($clients), 'clients_data.xlsx');
+    } catch (\Exception $e) {
+        \Log::error('Error al exportar datos: ' . $e->getMessage());
+
+        return response()->json(['error' => 'Error interno del servidor'], 500);
+    }
+}
+
+
+
 
     public function showStylist($stylist)
     {
@@ -45,7 +85,6 @@ class ClientController extends Controller
     {
         return response()
             ->json(Client::where('email', $email)
-                ->with('appointments.stylist', 'appointments.service')
                 ->orderByDesc('inicio', 'DESC')
                 ->get());
     }

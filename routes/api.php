@@ -7,7 +7,8 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\UpdateController;
-
+use App\Http\Controllers\ServiciosStylistController;
+use App\Http\Controllers\StylistController;
 
 
 // Public routes
@@ -42,6 +43,7 @@ Route::delete('appointment/{id}', 'App\Http\Controllers\ServicesController@destr
 
 
 Route::get('Prueba', 'App\Http\Controllers\ClientController@Prueba');
+Route::get('reservascliente/{email}', 'App\Http\Controllers\ClientController@show');
 Route::get('listar', 'App\Http\Controllers\ClientController@index');
 Route::get('postsnologin', 'App\Http\Controllers\PostController@indexnologin');
 
@@ -55,7 +57,9 @@ Route::get('clients/{email}', 'App\Http\Controllers\ClientController@show'); // 
 Route::get('client/{stylist}', 'App\Http\Controllers\ClientController@showAll'); // get all client showallID
 Route::get('clientid/{id}', 'App\Http\Controllers\ClientController@showallID'); // get all client showallID
 Route::delete('clients/{id}', 'App\Http\Controllers\ClientController@destroy');
+Route::post('export-data', 'App\Http\Controllers\ClientController@exportData');
 
+//Stylist
 Route::get('stylist/{id}', 'App\Http\Controllers\StylistController@show'); //listar uno
 Route::get('stylist', 'App\Http\Controllers\StylistController@index'); //listar todo
 Route::post('stylist', 'App\Http\Controllers\StylistController@register'); //crearte
@@ -63,11 +67,14 @@ Route::delete('stylist/{id}', 'App\Http\Controllers\StylistController@destroy');
 Route::get('/stylistsbusbar/{id}', 'App\Http\Controllers\StylistController@searchById'); //buscar
 Route::put('stylists/{id}', 'App\Http\Controllers\StylistController@update');
 Route::get('stylist/sucursal/{sucursal}', 'App\Http\Controllers\StylistController@indexBySucursal'); //listar stylsit por sucursal.
+Route::get('/stylists/{id}', [StylistController::class, 'getStylistById']);
+
 
 //ServiceStylist
 Route::get('servicestylist', 'App\Http\Controllers\ServiciosStylistController@index'); //listar todo
 Route::get('servicestylist/{id}', 'App\Http\Controllers\ServiciosStylistController@show'); // get single Stylist
 Route::get('servicestylistall/{stylist_id}', 'App\Http\Controllers\ServiciosStylistController@showServicesStylist'); // Listar los servicios que realiza la estilista
+Route::get('service-stylists/{serviceId}/{day}', [ServiciosStylistController::class, 'getStylistsForServiceAndDay']);
 
 
 Route::get('service/{id}', 'App\Http\Controllers\ServiceController@show');
