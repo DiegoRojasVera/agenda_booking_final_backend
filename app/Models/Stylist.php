@@ -11,7 +11,7 @@ class Stylist extends Model
         'photo',
         'phone',
         'score',
-	'sucursal',
+        'sucursal',
         'working_days', // Agregar 'working_days' como campo fillable
     ];
 
@@ -35,14 +35,16 @@ class Stylist extends Model
         return $this->belongsToMany(Service::class);
     }
 
-
     public function averageRating()
     {
         return $this->ratings()->avg('calificacion');
     }
 
-    public function working_days()
-    {
-        return $this->hasMany(Stylist::class, 'stylist_id');
-    }
+    // Este método debería ser eliminado ya que ya tienes 'working_days' definido en $casts
+    // public function working_days()
+    // {
+    //     return $this->hasMany(Stylist::class, 'stylist_id');
+    // }
 }
+
+
