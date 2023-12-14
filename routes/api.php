@@ -18,8 +18,8 @@ Route::post('/login', [AuthController::class, 'login']);
 //Bookin Router
 Route::get('services', 'App\Http\Controllers\ServicesController@index');
 Route::post('services', 'App\Http\Controllers\ServicesController@store');
-Route::get('/services/{id}/{day}/{date}', [ServicesController::class, 'show'])
-    ->name('services.show');
+Route::get('services/{id}/{day}', 'App\Http\Controllers\ServicesController@show');
+
 
 Route::get('grafico', 'App\Http\Controllers\AppointmentController@index');
 Route::get('monthly-summary/{month?}', 'App\Http\Controllers\AppointmentController@monthlySummary');

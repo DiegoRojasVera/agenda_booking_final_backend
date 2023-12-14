@@ -1,3 +1,4 @@
+l
 <?php
 
 namespace App\Http\Controllers;
@@ -98,9 +99,7 @@ class ServicesController extends Controller
      * estilistas que prestan este servicio y las
      * fechas que ya tienen agendadas.
      */
-
-
-public function show(ShowServiceRequest $request, String $id, String $day)
+public function show(Request $request, $id, $day)
 {
     $current_date = $request->get('date');
     
@@ -139,6 +138,8 @@ public function show(ShowServiceRequest $request, String $id, String $day)
 
     return response()->json($service, 200);
 }
+
+
 
 
 
