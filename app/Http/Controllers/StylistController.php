@@ -6,6 +6,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Stylist;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;  // Asegúrate de importar la fachada Log
+
+
 
 class StylistController extends Controller
 {
@@ -19,33 +22,56 @@ class StylistController extends Controller
 
 public function register(Request $request)
 {
-    // Validar los datos recibidos del formulario
-    $request->validate([
-        'name' => 'required|string',
-        'photo' => 'nullable|string',
-        'phone' => 'required|string',
-	'sucursal' => 'required|string',
-        'score' => 'required|numeric',
-        'working_days' => 'required|array',
-    ]);
+    try {
+        // Validar los datos recibidos del formulario
+        $request->validate([
+            'name' => 'required|string',
+            'photo' => 'nullable|string',
+            'phone' => 'required|string',
+            'sucursal' => 'required|string',
+            'score' => 'required|numeric',
+            'working_days' => 'required|array',
+        ]);
 
-    // Obtener los datos del formulario
-    $data = $request->only([
-        'name',
-        'photo',
-        'phone',	
-	'sucursal',
-        'score',
-        'working_days',
-    ]);
+        // Obtener los datos del formulario
+        $data = $request->only([
+            'name',
+            'photo',
+            'phone',
+            'sucursal',
+            'score',
+            'working_days',
+        ]);
 
-    // Crear un nuevo estilista con los datos proporcionados
-    $stylist = Stylist::create($data);
+        // Procesar los datos de working_days antes de almacenarlos
+        $workingDays = [];
+        foreach ($data['working_days'] as $dayInfo) {
+            // Verificar si la información del día contiene las claves necesarias
+            if (isset($dayInfo['day']) && isset($dayInfo['time'])) {
+                // Crear un nuevo array con el formato deseado
+                $workingDays[] = [
+                    'day' => $dayInfo['day'],
+                    'time' => $dayInfo['time'],
+                ];
+            }
+        }
 
-    // Retornar una respuesta con el mensaje "Stylist guardado"
-    return response()->json(['message' => 'Stylist guardado'], 200);
-	}
+        // Reemplazar el campo working_days con el nuevo formato
+        $data['working_days'] = $workingDays;
 
+        // Crear un nuevo estilista con los datos proporcionados
+        $stylist = Stylist::create($data);
+
+        // Retornar una respuesta con el mensaje "Stylist guardado"
+        return response()->json(['message' => 'Stylist guardado'], 200);
+    } catch (\Exception $e) {
+        // Log de la excepción
+        Log::error('Error al guardar el estilista: ' . $e->getMessage());
+
+        // Retornar una respuesta con el mensaje de error
+        return response()->json(['error' => 'Error al guardar el estilista'], 500);
+    }
+}
 
 
 // listar por sucursal
@@ -138,15 +164,45 @@ public function indexBySucursal($sucursal)
 
 }
 
+// aca es donde estamos en la actualizar
 
- public function getStylistById($id)
+
+
+
+
+
+  public function getScheduleForDay($id, $day)
     {
-        // Obtener el estilista por su ID
-        $stylist = Stylist::findOrFail($id);
+        try {
+            // Obtener el estilista por su ID
+            $stylist = Stylist::findOrFail($id);
 
-        // Retornar los datos del estilista en formato JSON
-        return response()->json($stylist);
+            // Filtrar los datos en working_days por el día proporcionado en la URL
+            $filteredSchedule = collect($stylist->working_days ?? [])->filter(function ($item) use ($day) {
+                return stristr($item['day'], $day) !== false;
+            });
+
+            // Log de información para verificar los datos
+            Log::info('Requested Stylist:', $stylist->toArray());
+            Log::info('Filtered Schedule:', $filteredSchedule->toArray());
+
+            // Retornar los datos filtrados
+            return response()->json([
+                'name' => $stylist->name,
+                'working_days' => $filteredSchedule->toArray(),
+            ], 200);
+        } catch (\Exception $e) {
+            // Log de la excepción
+            Log::error('Error al obtener el horario del estilista: ' . $e->getMessage());
+
+            // Retornar una respuesta con el mensaje de error
+            return response()->json(['error' => 'Error al obtener el horario del estilista'], 500);
+        }
     }
+
+
+
+
 
 
 }

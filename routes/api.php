@@ -69,6 +69,8 @@ Route::get('/stylistsbusbar/{id}', 'App\Http\Controllers\StylistController@searc
 Route::put('stylists/{id}', 'App\Http\Controllers\StylistController@update');
 Route::get('stylist/sucursal/{sucursal}', 'App\Http\Controllers\StylistController@indexBySucursal'); //listar stylsit por sucursal.
 Route::get('/stylists/{id}', [StylistController::class, 'getStylistById']);
+Route::get('/obtener-horarios/{id}/{day}', 'App\Http\Controllers\StylistController@getScheduleForDay');
+
 
 
 //ServiceStylist
