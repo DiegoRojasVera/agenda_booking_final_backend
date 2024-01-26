@@ -40,11 +40,8 @@ class Stylist extends Model
         return $this->ratings()->avg('calificacion');
     }
 
-    // Este método debería ser eliminado ya que ya tienes 'working_days' definido en $casts
-    // public function working_days()
-    // {
-    //     return $this->hasMany(Stylist::class, 'stylist_id');
-    // }
+    public function servicesStylist()
+    {
+        return $this->hasMany(Service_stylist::class, 'stylist_id');
+    }
 }
-
-

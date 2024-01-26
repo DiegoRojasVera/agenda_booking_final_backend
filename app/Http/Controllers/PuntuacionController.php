@@ -66,9 +66,28 @@ class PuntuacionController extends Controller
 
     //saber el nombre del stylist que nos da con la id
 
-    public function getServiceName($id)
-    {
-        $service = Service::find($id);
-        return response()->json(['name' => $service->name]);
+
+
+public function getServiceName($id)
+{
+    try {
+        // Busca el servicio por ID
+        $service = Service::findOrFail($id);
+
+        // Obtiene el nombre del servicio
+        $serviceName = $service->name;
+
+        // Regresa una respuesta JSON con el nombre del servicio
+        return response()->json(['name' => $serviceName]);
+    } catch (\Exception $e) {
+        // Log the exception for debugging
+        \Log::error('Error en getServiceName: ' . $e->getMessage());
+
+        // Manejar el error y devolver una respuesta adecuada
+        return response()->json(['error' => 'Error al obtener el nombre del servicio'], 500);
     }
+}
+
+
+
 }

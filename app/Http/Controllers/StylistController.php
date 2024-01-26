@@ -15,7 +15,7 @@ class StylistController extends Controller
     public function index()
     {
         return response()->json(Stylist::orderBy('id', 'ASC')
-            //  ->with('appointments.stylist', 'appointments.service')
+//             ->with('appointments.stylist', 'appointments.service')
             ->get());
     }
 
@@ -90,7 +90,7 @@ public function indexBySucursal($sucursal)
     {
         return response()
             ->json(Stylist::where('id', $id)
-                //     ->with('appointments.stylist', 'appointments.service')
+                     ->with('servicesStylist.service')
                 //->orderByDesc('email', 'DESC')
                 ->get());
     }
